@@ -22,7 +22,7 @@ for i = 1:length(x_t_vec)
 
     cdf_nn = zeros(1,length(d1_vec));
     for j = 1:length(d1_vec)
-        cdf_nn(j) = DistanceDist(d1_vec(j),x_t,R,lambda,r_vec,theta_vec);
+        cdf_nn(j) = DistanceDist(d1_vec(j),x_t,lambda,r_vec,theta_vec);
     end
     cdf_all{i} = cdf_nn;
 end
