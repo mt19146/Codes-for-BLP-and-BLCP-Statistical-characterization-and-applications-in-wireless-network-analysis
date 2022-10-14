@@ -1,5 +1,5 @@
 clc; clear all;
-%% Initilization;
+% Initilization
 P = 1;  % Power of Tx APs
 alpha = 2;  % Fading Coeff.
 B = 75e6;   % Bandwidth
