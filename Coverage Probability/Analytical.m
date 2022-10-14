@@ -1,4 +1,5 @@
 clc; clear all;
+
 %% Initilization
 P = 1;  % Power of Tx APs
 alpha = 2;  % Fading Coeff.
@@ -15,6 +16,7 @@ x_t_vec = 0:1:2;    % Test point
 r_vec = 0:1:R;
 theta_vec = linspace(0,2*pi,101);
 d1_vec = eps:0.1:100;%sqrt((x_t+R)^2+R^2);
+
 %% PGFL and CDF Calculation
 for i = 1:length(x_t_vec)
     x_t = x_t_vec(i);
@@ -26,6 +28,7 @@ for i = 1:length(x_t_vec)
     end
     cdf_all{i} = cdf_nn;
 end
+
 %% Coverage Probabailty Calculation
 inner_term = exp(-gamma*N0./(K*P*(d1_vec.^(-alpha))));
 for i = 1:length(x_t_vec)
@@ -38,9 +41,9 @@ for i = 1:length(x_t_vec)
     pdf = 1-((cdf_all{1,i}./(2*pi*R)).^(nB));
     pdf_d1 = [eps, diff(pdf)./diff(d1_vec)];
     
-    G_NI = ((pgfl(1,:) + pgfl(2,:))./(2*pi*R)).^(nB-1);
+    G_I_NI = ((pgfl(1,:) + pgfl(2,:))./(2*pi*R)).^(nB-1);
     G_I = ((pgfl(1,:)./(Area_D)));
     G_I(1)=1;
 
-    cov(i) = trapz(d1_vec,pdf_d1.*inner_term.*G_I.*G_NI);
+    cov(i) = trapz(d1_vec,pdf_d1.*inner_term.*G_I.*G_I_NI);
 end
