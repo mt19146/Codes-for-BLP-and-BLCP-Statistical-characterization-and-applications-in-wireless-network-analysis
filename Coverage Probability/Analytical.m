@@ -28,7 +28,7 @@ for i = 1:length(x_t_vec)
     cdf_all{i} = cdf_nn;
 end
 
-%% Coverage Probabailty Calculation;
+%% Coverage Probabailty Calculation %%
 inner_term = exp(-gamma*N0./(K*P*(d1_vec.^(-alpha))));
 for i = 1:length(x_t_vec)
     x_t = x_t_vec(i);
