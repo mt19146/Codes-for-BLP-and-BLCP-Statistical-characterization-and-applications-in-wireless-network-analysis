@@ -14,9 +14,9 @@ lambda_ap = 0.1;   % Intensity of PPP on lines
 x_t_vec = 0:1:100;    % Test point
 p_t_vec = 0:0.01:1; % Transmisson Probability
 
-r_vec = 0:1:R;
-theta_vec = linspace(0,2*pi,101);
-d1_vec = eps:0.1:100;%sqrt((x_t+R)^2+R^2);
+r_vec = 0:0.1:R;
+theta_vec = linspace(0,2*pi,501);
+d1_vec = eps:0.1:200;%sqrt((x_t+R)^2+R^2);
 
 %% PGFL and CDF Calculation
 PGFL_I_NI = [];
@@ -37,7 +37,7 @@ for i = 1:length(x_t_vec)
         cdf_nn(j) = DistanceDist(d1_vec(j),x_t,lambda_ap,r_vec,theta_vec);
     end
     cdf_all{i} = cdf_nn;
-end 
+end
 
 %% Meta Calcualtions
 b=1; % For M_{1}, b=1 and M_{-1}, b=-1
@@ -47,18 +47,21 @@ for j=1:length(x_t_vec)
     x_t = x_t_vec(j);
     meta = zeros(1,length(p_t_vec));
     pgfl = PGFL_I_NI(2*(j-1)*length(p_t_vec)+1:2*j*length(p_t_vec),:);
+
     %% PDF of Nearest Neighbour
     pdf = 1-((cdf_all{1,j}./(2*pi*R)).^(nB));
     pdf_d1 = [eps, diff(pdf)./diff(d1_vec)];
+
     %% Area of Domain Band
     Area_D = arrayfun(@(x) Ad(x,x_t,R),d1_vec);
     Area_D(1) = eps;
+
     %% Meta Distribution
     for i = 1:length(p_t_vec)
         p_t = p_t_vec(i);
         pgfl_temp = pgfl((2*i)-1:2*i,:);
-        pgfl_i_ni = ((pgfl_temp(1,:) + pgfl_temp(2,:))./(2*pi*R)).^(nB-1);
-        pgfl_i = ((pgfl_temp(1,:)./(Area_D)));
+        pgfl_i_ni  = ((pgfl_temp(1,:) + pgfl_temp(2,:))./(2*pi*R)).^(nB-1);
+        pgfl_i  = ((pgfl_temp(1,:)./(Area_D)));
         pgfl_i(1)=1;
         meta(i) = trapz(d1_vec,pgfl_i.*pgfl_i_ni.*pdf_d1.*noise_term);
     end
@@ -71,5 +74,9 @@ M_1 = results(i,:);
 std = lambda_ap*M_1.*p_t_vec;
 
 %% Mean Local Delay
+% i=1;    % choose i for x_t value i.e. i=1 means x_t = 0, i=51 means x_t=50
+% mld = results(i,:)./p_t_vec;
+
+%% Opt Transmisson Prob
 % [~, ind] = arrayfun(@(i) min(results(i,1:end-1)./p_t_vec(1:end-1)),1:1:length(p_t_vec));
 % D_p = p_t_vec(ind);
