@@ -38,9 +38,9 @@ for i = 1:length(x_t_vec)
     pdf = 1-((cdf_all{1,i}./(2*pi*R)).^(nB));
     pdf_d1 = [eps, diff(pdf)./diff(d1_vec)];
 
-    G_I_NI = ((pgfl(1,:) + pgfl(2,:))./(2*pi*R)).^(nB-1);
+    G_NI = ((pgfl(1,:) + pgfl(2,:))./(2*pi*R)).^(nB-1);
     G_I = ((pgfl(1,:)./(Area_D)));
     G_I(1)=1;
 
-    cov(i) = trapz(d1_vec,pdf_d1.*inner_term.*G_I.*G_I_NI);
+    cov(i) = trapz(d1_vec,pdf_d1.*inner_term.*G_I.*G_NI);
 end
