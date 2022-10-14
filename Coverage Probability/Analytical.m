@@ -13,9 +13,9 @@ R = 50; % Radius of circle where lines are generated
 lambda_ap = 0.1;   % Intensity of PPP on lines
 x_t_vec = 0:1:2;    % Test point
 
-r_vec = 0:1:R;
-theta_vec = linspace(0,2*pi,101);
-d1_vec = eps:0.1:100;%sqrt((x_t+R)^2+R^2);
+r_vec = 0:0.1:R;
+theta_vec = linspace(0,2*pi,501);
+d1_vec = eps:0.1:200;%sqrt((x_t+R)^2+R^2);
 
 %% PGFL and CDF Calculation
 for i = 1:length(x_t_vec)
