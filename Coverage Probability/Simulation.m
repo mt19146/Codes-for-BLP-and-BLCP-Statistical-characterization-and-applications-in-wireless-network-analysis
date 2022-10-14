@@ -11,7 +11,7 @@ gamma = db2pow(-10); % Gamma threshold
 nB = 10;    % Number of Lines
 R = 50; % Radius of circle where lines are generated
 lambda = 0.1;   % Intensity of PPP on lines
-x_t_vec = 0:1:2;    % Test point
+x_t_vec = 0:1:100;    % Test point
 
 L = 5000;   % Length of each line
 iterations = 1e6;
