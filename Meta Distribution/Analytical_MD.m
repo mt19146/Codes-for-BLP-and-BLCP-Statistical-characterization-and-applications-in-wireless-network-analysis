@@ -59,7 +59,7 @@ for j=1:length(x_t_vec)
         pgfl_temp = pgfl((2*i)-1:2*i,:);
         pgfl_i_ni = ((pgfl_temp(1,:) + pgfl_temp(2,:))./(2*pi*R)).^(nB-1);
         pgfl_i = ((pgfl_temp(1,:)./(Area_D)));
-        t4(1)=1;
+        pgfl_i(1)=1;
         meta(i) = trapz(d1_vec,pgfl_i.*pgfl_i_ni.*pdf_d1.*noise_term);
     end
     results = [results; meta];
