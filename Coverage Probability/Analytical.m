@@ -6,7 +6,7 @@ B = 75e6;   % Bandwidth
 N0 = B*10.^((-20.4));   % Noise
 K = 1e-5;   % Path loss Constant
 gamma = db2pow(-10); % Gamma threshold
-%% Parameters
+% Parameters
 nB = 10;    % Number of Lines
 R = 50; % Radius of circle where lines are generated
 lambda_ap = 0.1;   % Intensity of PPP on lines
@@ -16,7 +16,7 @@ r_vec = 0:1:R;
 theta_vec = linspace(0,2*pi,501);
 d1_vec = eps:0.1:200;%sqrt((x_t+R)^2+R^2);
 
-%% PGFL and CDF Calculation;
+% PGFL and CDF Calculation
 for i = 1:length(x_t_vec)
     x_t = x_t_vec(i);
     PGFL_I_NI{i} = fnAvF(gamma,d1_vec,theta_vec,r_vec,x_t,lambda_ap);
@@ -28,15 +28,15 @@ for i = 1:length(x_t_vec)
     cdf_all{i} = cdf_nn;
 end
 
-%% Coverage Probabailty Calculation %%
+% Coverage Probabailty Calculation
 inner_term = exp(-gamma*N0./(K*P*(d1_vec.^(-alpha))));
 for i = 1:length(x_t_vec)
     x_t = x_t_vec(i);
     pgfl = PGFL_I_NI{1,i};
-    %% Area of Domain Band;
+    % Area of Domain Band
     Area_D = arrayfun(@(x) Ad(x,x_t,R),d1_vec);
     Area_D(1) = eps;
-    %% PDF of Nearest Neighbour
+    % PDF of Nearest Neighbour
     pdf = 1-((cdf_all{1,i}./(2*pi*R)).^(nB));
     pdf_d1 = [eps, diff(pdf)./diff(d1_vec)];
     
