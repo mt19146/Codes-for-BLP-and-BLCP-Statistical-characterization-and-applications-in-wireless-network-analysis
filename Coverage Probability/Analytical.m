@@ -9,23 +9,25 @@ gamma = db2pow(-10); % Gamma threshold
 %% Parameters
 nB = 10;    % Number of Lines
 R = 50; % Radius of circle where lines are generated
-lambda = 0.1;   % Intensity of PPP on lines
-x_t_vec = 0:1:100;    % Test point
+lambda_ap = 0.1;   % Intensity of PPP on lines
+x_t_vec = 0:1:2;    % Test point
 
+r_vec = 0:1:R;
 theta_vec = linspace(0,2*pi,501);
 d1_vec = eps:0.1:200;%sqrt((x_t+R)^2+R^2);
+
 %% PGFL and CDF Calculation
 for i = 1:length(x_t_vec)
     x_t = x_t_vec(i);
-    r_vec = 0:0.1:R;
-    PGFL_I_NI{i} = fnAvF(gamma,d1_vec,theta_vec,r_vec,x_t,lambda);
+    PGFL_I_NI{i} = fnAvF(gamma,d1_vec,theta_vec,r_vec,x_t,lambda_ap);
 
     cdf_nn = zeros(1,length(d1_vec));
     for j = 1:length(d1_vec)
-        cdf_nn(j) = DistanceDist(d1_vec(j),x_t,lambda,r_vec,theta_vec);
+        cdf_nn(j) = DistanceDist(d1_vec(j),x_t,lambda_ap,r_vec,theta_vec);
     end
     cdf_all{i} = cdf_nn;
 end
+
 %% Coverage Probabailty Calculation
 inner_term = exp(-gamma*N0./(K*P*(d1_vec.^(-alpha))));
 for i = 1:length(x_t_vec)
@@ -34,10 +36,10 @@ for i = 1:length(x_t_vec)
     %% Area of Domain Band
     Area_D = arrayfun(@(x) Ad(x,x_t,R),d1_vec);
     Area_D(1) = eps;
-    %% PDF of nearest neighbour
+    %% PDF of Nearest Neighbour
     pdf = 1-((cdf_all{1,i}./(2*pi*R)).^(nB));
     pdf_d1 = [eps, diff(pdf)./diff(d1_vec)];
-
+    
     G_NI = ((pgfl(1,:) + pgfl(2,:))./(2*pi*R)).^(nB-1);
     G_I = ((pgfl(1,:)./(Area_D)));
     G_I(1)=1;
