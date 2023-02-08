@@ -1,44 +1,34 @@
 clc; clear all;
-%% Initilization
-R = 50; % Radius of circle where lines are generated
-nB = 10;    % Number of Lines
+%% Input
+R=50;
+nB=5;
+r_0 = 100;
 
-xt = 0; yt = 0;   % Coordinates of test point
+t_vec = linspace(eps,100,200);
+theta = linspace(0,pi,500);
+alpha_vec = linspace(0,pi,500);
 
-t_vec = linspace(eps,200,400);
-theta = linspace(eps,pi,500);
+prob = [];
+tt=[];
 
-%%  Area of Domain bands corresponding to Nearest Intersection
-ni_dist = [];
-
-for i=1:length(t_vec)
+for i = 1:length(t_vec)
     t=t_vec(i);
-
-    ff1 = @(xt,t,yt,theta) sqrt(yt^2 + (xt-t)^2)*cos(atan(yt/(xt-t)) + theta);
-    ff2 = @(xt,t,yt,theta) sqrt(yt^2 + (xt+t)^2)*cos(atan(yt/(xt+t)) + theta);
-    
-    r_L = ff1(xt,t,yt,theta);
-    r_U = ff2(xt,t,yt,theta);
-    
-    
-    r_L(r_L>R)=R;
-    r_U(r_U>R)=R;
-    r_L(r_L<-R)=-R;
-    r_U(r_U<-R)=-R;
-    
-    
-    if xt-t<=0
-        r_L=-r_L;
+    prob1=[];
+    for j=1:length(alpha_vec)
+        alpha=alpha_vec(j);
+        if alpha<=(pi/2)
+            r_L = [max(-R,min(R,r_0*cos(theta(theta<=alpha+pi/2)) - t*cos(theta(theta<=alpha+pi/2)-alpha))) ...
+                max(-R,min(R,r_0*cos(theta(theta>alpha+pi/2)) + t*cos(theta(theta>alpha+pi/2)-alpha)))];
+            r_U = [max(-R,min(R,r_0*cos(theta(theta<=alpha+pi/2)) + t*cos(theta(theta<=alpha+pi/2)-alpha))) ...
+                max(-R,min(R,r_0*cos(theta(theta>alpha+pi/2)) - t*cos(theta(theta>alpha+pi/2)-alpha)))];
+        else
+            r_L = [min(R,max(-R,r_0*cos(theta(theta<=alpha-pi/2)) + t*cos(theta(theta<=alpha-pi/2)-alpha))) ...
+                max(-R,min(R,r_0*cos(theta(theta>alpha-pi/2)) - t*cos(theta(theta>alpha-pi/2)-alpha)))];
+            r_U = [min(R,max(-R,r_0*cos(theta(theta<=alpha-pi/2)) - t*cos(theta(theta<=alpha-pi/2)-alpha))) ...
+                max(-R,min(R,r_0*cos(theta(theta>alpha-pi/2)) + t*cos(theta(theta>alpha-pi/2)-alpha)))];
+        end
+        prob1 = [prob1 (trapz(theta,r_U) - trapz(theta,r_L))/(2*pi*R)];
     end
-    if xt+t<=0
-        r_U=-r_U;
-    end
-    
-    temp = r_L;
-    r_L(r_L>r_U) = r_U(r_L>r_U);
-    r_U(temp>r_U) = temp(temp>r_U);
-    ni_dist = [ni_dist (trapz(theta,r_U) - trapz(theta,r_L))];
+    prob = [prob trapz(alpha_vec, prob1)/(pi)];%[prob prob1];%
 end
-
-%% Nearest Intersection Distribution Calculation
-ni_dist = 1-(1-ni_dist./(2*R*pi)).^nB;
+prob_o = 1-(1-prob./(1)).^nB;
