@@ -9,7 +9,6 @@ theta = linspace(0,pi,500);
 alpha_vec = linspace(0,pi,500);
 
 prob = [];
-tt=[];
 
 for i = 1:length(t_vec)
     t=t_vec(i);
@@ -29,6 +28,6 @@ for i = 1:length(t_vec)
         end
         prob1 = [prob1 (trapz(theta,r_U) - trapz(theta,r_L))/(2*pi*R)];
     end
-    prob = [prob trapz(alpha_vec, prob1)/(pi)];%[prob prob1];%
+    prob = [prob trapz(alpha_vec, prob1)/(pi)];
 end
 prob_o = 1-(1-prob./(1)).^nB;
