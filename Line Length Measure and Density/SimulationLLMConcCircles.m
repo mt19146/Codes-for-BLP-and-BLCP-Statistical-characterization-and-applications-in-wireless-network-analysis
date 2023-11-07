@@ -19,7 +19,7 @@ gamma_vec = 0.1;
 
 t_vec=1:1:50;
 results = [];
-for i=1:length(t_vec)
+for i=1:length(t_vec)-1
     t = t_vec(i:i+1);
     temp = SimFxnLength(gamma_vec,iterations,nB,r0,R,t);
     results = [results; temp];
